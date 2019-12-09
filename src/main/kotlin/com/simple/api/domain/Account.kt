@@ -1,4 +1,4 @@
-package com.revolut.api.domain
+package com.simple.api.domain
 
 import java.math.BigDecimal
 

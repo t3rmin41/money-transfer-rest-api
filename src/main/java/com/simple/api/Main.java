@@ -1,4 +1,4 @@
-package com.revolut.api;
+package com.simple.api;
 
 public class Main {
 

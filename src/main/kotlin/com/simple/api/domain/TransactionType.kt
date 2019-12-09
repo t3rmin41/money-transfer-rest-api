@@ -1,4 +1,4 @@
-package com.revolut.api.domain
+package com.simple.api.domain
 
 enum class TransactionType {
     DEPOSIT,

@@ -5,18 +5,19 @@ import com.simple.api.dto.AccountDto;
 import com.simple.api.exceptions.AccountNotFoundException;
 import com.simple.api.mapper.AccountMapper;
 import com.simple.api.repository.AccountRepository;
+import com.simple.api.repository.AccountRepositoryImpl;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class AccountService {
 
-    private AccountRepository accountRepository = new AccountRepository();
+    private AccountRepository accountRepository = AccountRepositoryImpl.getInstance();
 
     private AccountMapper accountMapper = new AccountMapper();
 
     public List<AccountDto> getAccounts() {
-        return accountRepository.getAccounts().values().stream().map(domain ->
+        return accountRepository.getAccounts().stream().map(domain ->
             new AccountDto(domain.getId(), domain.getName(), domain.getBalance()))
         .collect(Collectors.toList());
     }
@@ -26,8 +27,7 @@ public class AccountService {
     }
 
     public AccountDto updateAccount(String id, AccountDto dto) throws AccountNotFoundException {
-        getById(id);
-        return accountMapper.toDto(accountRepository.updateAccount(new Long(id), accountMapper.toDomain(dto)));
+        return accountMapper.toDto(accountRepository.updateAccountName(new Long(id), accountMapper.toDomain(dto)));
     }
 
     public AccountDto getById(String id) throws AccountNotFoundException {

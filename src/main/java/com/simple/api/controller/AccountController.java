@@ -1,6 +1,7 @@
 package com.simple.api.controller;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.simple.api.dto.AccountDto;
 import com.simple.api.errors.ErrorMessage;
 import com.simple.api.exceptions.AccountNotFoundException;
@@ -23,19 +24,29 @@ public class AccountController implements ApiController {
 
     private static final Logger log = LoggerFactory.getLogger(AccountController.class);
 
+    private GsonBuilder gsonBuilder;
+
     private AccountService accountService = new AccountService();
 
+    public AccountController(GsonBuilder gsonBuilder) {
+        this.gsonBuilder = gsonBuilder;
+    }
+
     public void init() {
-        get("/users", this::getAccounts);
-        get("/users/:id", this::getAccountById);
-        post("/users", this::createAccount);
-        put("/users/:id", this::updateAccount);
+        get("/accounts", this::getAccounts);
+        get("/accounts/:id", this::getAccountById);
+        post("/accounts", this::createAccount);
+        put("/accounts/:id", this::updateAccount);
     }
 
     public String getAccounts(Request req, Response res) {
         logRequest(req, res);
         res.type(ApiController.CONTENT_TYPE);
-        return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS, new Gson().toJsonTree(accountService.getAccounts()), null,null));
+        return gsonBuilder.create().toJson(
+                new StandardResponse(StatusResponse.SUCCESS,
+                        gsonBuilder.create().toJsonTree(accountService.getAccounts()),
+                            null,
+                              null));
     }
 
     public String getAccountById(Request req, Response res) {
@@ -43,10 +54,18 @@ public class AccountController implements ApiController {
         res.type(ApiController.CONTENT_TYPE);
         List<ErrorMessage> errors = new ArrayList<>();
         try {
-            return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS, new Gson().toJsonTree(accountService.getById(req.params(":id"))), null,null));
+            return gsonBuilder.create().toJson(
+                    new StandardResponse(StatusResponse.SUCCESS,
+                            gsonBuilder.create().toJsonTree(accountService.getById(req.params(":id"))),
+                                 null,
+                                   null));
         } catch (AccountNotFoundException e) {
             errors.add(new ErrorMessage("id", String.join(" : ", e.getAccountId().toString(), e.getMessage())));
-            return new Gson().toJson(new StandardResponse(StatusResponse.ERROR, new Gson().toJsonTree(errors), null,null));
+            return gsonBuilder.create().toJson(
+                    new StandardResponse(StatusResponse.ERROR,
+                            gsonBuilder.create().toJsonTree(errors),
+                                 null,
+                                   null));
         }
     }
 
@@ -54,20 +73,32 @@ public class AccountController implements ApiController {
         logRequest(req, res);
         res.type(ApiController.CONTENT_TYPE);
         List<ErrorMessage> errors = new ArrayList<>();
-        AccountDto dto = new Gson().fromJson(req.body(), AccountDto.class);
-        return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS, new Gson().toJsonTree(accountService.createAccount(dto)), null, null));
+        AccountDto dto = gsonBuilder.create().fromJson(req.body(), AccountDto.class);
+        return gsonBuilder.create().toJson(
+                new StandardResponse(StatusResponse.SUCCESS,
+                        gsonBuilder.create().toJsonTree(accountService.createAccount(dto)),
+                            null,
+                              null));
     }
 
     public String updateAccount(Request req, Response res) {
         logRequest(req, res);
         res.type(ApiController.CONTENT_TYPE);
         List<ErrorMessage> errors = new ArrayList<>();
-        AccountDto fieldsToEdit = new Gson().fromJson(req.body(), AccountDto.class);
+        AccountDto fieldsToEdit = gsonBuilder.create().fromJson(req.body(), AccountDto.class);
         try {
-            return new Gson().toJson(new StandardResponse(StatusResponse.SUCCESS, new Gson().toJsonTree(accountService.updateAccount(req.params(":id"), fieldsToEdit)), null,null));
+            return gsonBuilder.create().toJson(
+                    new StandardResponse(StatusResponse.SUCCESS,
+                            gsonBuilder.create().toJsonTree(accountService.updateAccount(req.params(":id"), fieldsToEdit)),
+                                 null,
+                                   null));
         } catch (AccountNotFoundException e) {
             errors.add(new ErrorMessage("id", String.join(" : ", e.getAccountId().toString(), e.getMessage())));
-            return new Gson().toJson(new StandardResponse(StatusResponse.ERROR, new Gson().toJsonTree(errors), null,null));
+            return gsonBuilder.create().toJson(
+                    new StandardResponse(StatusResponse.ERROR,
+                            gsonBuilder.create().toJsonTree(errors),
+                                null,
+                                  null));
         }
     }
 

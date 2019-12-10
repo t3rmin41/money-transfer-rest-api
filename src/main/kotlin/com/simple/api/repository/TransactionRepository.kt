@@ -4,5 +4,5 @@ import com.simple.api.domain.Transaction
 import java.util.Collections
 
 data class TransactionRepository(
-    val transactions: Collection<Transaction> = Collections.synchronizedCollection(ArrayList<Transaction>())
+    val transactions: Map<String, Transaction> = Collections.synchronizedMap(HashMap<String, Transaction>())
 )

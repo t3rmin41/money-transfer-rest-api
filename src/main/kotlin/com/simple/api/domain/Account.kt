@@ -3,7 +3,7 @@ package com.simple.api.domain
 import java.math.BigDecimal
 
 data class Account(
-    val id: String? = null,
-    val name: String? = null,
-    val balance: BigDecimal? = null
+    val id: Long?,
+    var name: String? = null,
+    var balance: BigDecimal? = BigDecimal.ZERO
 )

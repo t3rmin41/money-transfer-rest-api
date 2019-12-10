@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false">
+
+    <property name="log-dir" value="api-log" />
+    <property name="COMMON_LOG_PATTERN" value="%-30([%thread]) %-5level - %logger{32} - %msg%n"/>
+
+    <!-- Stop output INFO at start -->
+    <statusListener class="ch.qos.logback.core.status.NopStatusListener" />
+
+    <appender name="simpleConsole" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>%d{"yyyy-MM-dd HH:mm:ss,SSS 'UTC'", UTC} ${COMMON_LOG_PATTERN}</pattern>
+        </layout>
+    </appender>
+
+    <appender name="SYSLOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>./${log-dir}/sys.log</file>
+        <append>false</append>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>%d{"yyyy-MM-dd HH:mm:ss,SSS 'UTC'", UTC} ${COMMON_LOG_PATTERN}</pattern>
+        </layout>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <FileNamePattern>./${log-dir}/sys.%d{yyyy-MM-dd}.%i.log.zip</FileNamePattern>
+            <MinIndex>0</MinIndex>
+            <MaxIndex>14</MaxIndex>
+        </rollingPolicy>
+
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <MaxFileSize>20MB</MaxFileSize>
+        </triggeringPolicy>
+    </appender>
+
+    <root level="INFO" additivity="false">
+        <appender-ref ref="SYSLOG" />
+        <appender-ref ref="simpleConsole" />
+    </root>
+
+</configuration>

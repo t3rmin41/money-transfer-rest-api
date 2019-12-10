@@ -7,9 +7,8 @@ import java.time.Instant
 
 data class TransactionDto(
     val type: TransactionType? = null,
-    val from: String? = null,
-    val to: String? = null,
+    val from: Long? = null,
+    val to: Long? = null,
     val amount: BigDecimal? = null,
-    @JsonIgnore
     val timestamp: Instant? = null
 )

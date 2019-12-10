@@ -1,12 +1,12 @@
-package com.simple.api.domain
+package com.simple.api.exceptions
 
-import java.math.BigDecimal
+import com.simple.api.domain.TransactionType
 import java.time.Instant
 
-data class Transaction(
+data class InvalidTransactionException(
     val type: TransactionType? = null,
+    val amount: String? = null,
     val from: Long? = null,
     val to: Long? = null,
-    val amount: BigDecimal? = null,
     val timestamp: Instant? = null
 )

@@ -60,7 +60,7 @@ public class AccountController implements ApiController {
                                  null,
                                    null));
         } catch (AccountNotFoundException e) {
-            errors.add(new ErrorMessage("id", String.join(" : ", e.getAccountId().toString(), e.getMessage())));
+            errors.add(new ErrorMessage("id", String.join(" : ", String.valueOf(e.getAccountId()), e.getMessage())));
             return gsonBuilder.create().toJson(
                     new StandardResponse(StatusResponse.ERROR,
                             gsonBuilder.create().toJsonTree(errors),
@@ -93,7 +93,7 @@ public class AccountController implements ApiController {
                                  null,
                                    null));
         } catch (AccountNotFoundException e) {
-            errors.add(new ErrorMessage("id", String.join(" : ", e.getAccountId().toString(), e.getMessage())));
+            errors.add(new ErrorMessage("id", String.join(" : ", String.valueOf(e.getAccountId()), e.getMessage())));
             return gsonBuilder.create().toJson(
                     new StandardResponse(StatusResponse.ERROR,
                             gsonBuilder.create().toJsonTree(errors),

@@ -21,12 +21,17 @@ public class Main {
     public static void main(String args[]) {
         log.info("Starting REST API");
         port(PORT);
+        GsonBuilder gsonBuilder = gsonBuilder();
+        new AccountController(gsonBuilder).init();
+        new TransactionController(gsonBuilder).init();
+    }
+
+    public static GsonBuilder gsonBuilder() {
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(Instant.class, new InstantSerializer());
         gsonBuilder.registerTypeAdapter(Instant.class, new InstantDeserializer());
         gsonBuilder.setPrettyPrinting();
-        new AccountController(gsonBuilder).init();
-        new TransactionController(gsonBuilder).init();
+        return gsonBuilder;
     }
 
 }

@@ -4,7 +4,7 @@ import com.simple.api.dto.TransactionDto;
 import com.simple.api.exceptions.AccountNotFoundException;
 import com.simple.api.exceptions.NegativeBalanceException;
 import com.simple.api.exceptions.UnknwonTransactionTypeException;
-import com.simple.api.mapper.TransactionMapper;
+import com.simple.api.mapper.TransactionMapperKt;
 import com.simple.api.repository.AccountRepository;
 import com.simple.api.repository.AccountRepositoryImpl;
 import com.simple.api.repository.TransactionRepository;
@@ -18,8 +18,6 @@ public class TransactionService {
     private TransactionRepository transactionRepository = TransactionRepositoryImpl.getInstance();
     private AccountRepository accountRepository = AccountRepositoryImpl.getInstance();
 
-    private TransactionMapper transactionMapper = new TransactionMapper();
-
     public List<TransactionDto> getTransactions() {
         return transactionRepository.getTransactions().stream().map(domain ->
             new TransactionDto(domain.getId(), domain.getType(), domain.getFrom(), domain.getTo(), domain.getAmount(), domain.getTimestamp()))
@@ -27,17 +25,17 @@ public class TransactionService {
     }
 
     public List<TransactionDto> getAccountTransactions(String accountId) {
-        return transactionRepository.getAccountTransactions(new Long(accountId)).stream().map(domain -> transactionMapper.toDto(domain))
+        return transactionRepository.getAccountTransactions(new Long(accountId)).stream().map(domain -> TransactionMapperKt.toDto(domain))
                .collect(Collectors.toList());
     }
 
     public List<TransactionDto> getAccountIncomingTransactions(String accountId) {
-        return transactionRepository.getAccountIncomingTransactions(new Long(accountId)).stream().map(domain -> transactionMapper.toDto(domain))
+        return transactionRepository.getAccountIncomingTransactions(new Long(accountId)).stream().map(domain -> TransactionMapperKt.toDto(domain))
                 .collect(Collectors.toList());
     }
 
     public List<TransactionDto> getAccountOutgoingTransactions(String accountId) {
-        return transactionRepository.getAccountOutgoingTransactions(new Long(accountId)).stream().map(domain -> transactionMapper.toDto(domain))
+        return transactionRepository.getAccountOutgoingTransactions(new Long(accountId)).stream().map(domain -> TransactionMapperKt.toDto(domain))
                 .collect(Collectors.toList());
     }
 
@@ -53,7 +51,7 @@ public class TransactionService {
     private TransactionDto processDeposit(TransactionDto dto) throws AccountNotFoundException {
         try {
             accountRepository.increaseAccountBalance(dto.getTo(), dto.getAmount());
-            return transactionMapper.toDto(transactionRepository.create(transactionMapper.toDomain(dto)));
+            return TransactionMapperKt.toDto(transactionRepository.create(TransactionMapperKt.toDomain(dto)));
         } catch (AccountNotFoundException e) {
             throw new AccountNotFoundException(e.getAccountId(), e.getMessage());
         }
@@ -62,7 +60,7 @@ public class TransactionService {
     public TransactionDto processWithdrawal(TransactionDto dto) throws AccountNotFoundException, NegativeBalanceException {
         try {
             accountRepository.decreaseAccountBalance(dto.getFrom(), dto.getAmount());
-            return transactionMapper.toDto(transactionRepository.create(transactionMapper.toDomain(dto)));
+            return TransactionMapperKt.toDto(transactionRepository.create(TransactionMapperKt.toDomain(dto)));
         } catch (AccountNotFoundException e) {
             throw new AccountNotFoundException(e.getAccountId(), e.getMessage());
         } catch (NegativeBalanceException e) {
@@ -73,7 +71,7 @@ public class TransactionService {
     public TransactionDto processTransfer(TransactionDto dto) throws AccountNotFoundException, NegativeBalanceException {
         try {
             accountRepository.transferBetweenAccounts(dto.getFrom(), dto.getTo(), dto.getAmount());
-            return transactionMapper.toDto(transactionRepository.create(transactionMapper.toDomain(dto)));
+            return TransactionMapperKt.toDto(transactionRepository.create(TransactionMapperKt.toDomain(dto)));
         } catch (AccountNotFoundException e) {
             throw new AccountNotFoundException(e.getAccountId(), e.getMessage());
         } catch (NegativeBalanceException e) {

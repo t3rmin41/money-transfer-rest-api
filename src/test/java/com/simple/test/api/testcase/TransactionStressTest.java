@@ -6,8 +6,12 @@ import com.simple.api.repository.TransactionRepository;
 import com.simple.api.repository.TransactionRepositoryImpl;
 import com.simple.test.api.tester.MultithreadedStressTester;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestMethodOrder;
 
 import java.math.BigDecimal;
 import java.time.Instant;

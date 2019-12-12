@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
 import com.simple.api.Main;
 import com.simple.api.controller.AccountController;
+import com.simple.api.domain.Account;
 import com.simple.api.dto.AccountDto;
 import com.simple.api.http.StandardResponse;
 import com.simple.api.http.StatusResponse;
@@ -12,23 +13,28 @@ import com.simple.api.repository.AccountRepository;
 import com.simple.api.repository.AccountRepositoryImpl;
 import com.simple.test.api.utils.ApiTestUtils;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static spark.Spark.awaitInitialization;
+import static spark.Spark.awaitStop;
 import static spark.Spark.port;
 import static spark.Spark.stop;
 
+//@Disabled
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AccountManagementTest {
+
+    private static final Logger log = LoggerFactory.getLogger(AccountManagementTest.class);
 
     private AccountRepository accountRepository = AccountRepositoryImpl.getInstance();
 
@@ -37,6 +43,9 @@ public class AccountManagementTest {
     private AccountDto john = new AccountDto(null, "John", null);
     private AccountDto doe = new AccountDto(1L, "Doe", null);
 
+    private Account johnDomain = new Account(null, "John", null);
+    private Account doeDomain = new Account(1L, "Doe", null);
+
     @BeforeAll
     public void init() {
         port(Main.PORT);
@@ -44,8 +53,13 @@ public class AccountManagementTest {
         awaitInitialization();
     }
 
+    @BeforeEach
+    public void initData() {
+        accountRepository.createAccount(johnDomain);
+        accountRepository.createAccount(doeDomain);
+    }
+
     @Test
-    @Order(1)
     public void createAccountTest() {
         String endpoint = "/accounts";
         ApiTestUtils.TestResponse response = ApiTestUtils.request("POST", endpoint, gsonBuilder.create().toJsonTree(john, AccountDto.class).toString());
@@ -54,11 +68,10 @@ public class AccountManagementTest {
         assertEquals(true, gsonBuilder.create().fromJson(response.body, StandardResponse.class).getData().isJsonObject());
         JsonElement dataJson = gsonBuilder.create().fromJson(response.body, StandardResponse.class).getData();
         AccountDto account = gsonBuilder.create().fromJson(dataJson, AccountDto.class);
-        assertEquals(1L, account.getId().longValue());
+        assertEquals(3L, account.getId().longValue());
     }
 
     @Test
-    @Order(2)
     public void getAccountsTest() {
         String endpoint = "/accounts";
         ApiTestUtils.TestResponse response = ApiTestUtils.request("GET", endpoint, null);
@@ -71,7 +84,6 @@ public class AccountManagementTest {
     }
 
     @Test
-    @Order(3)
     public void getAccountByIdTest() {
         String endpoint = "/accounts/1";
         ApiTestUtils.TestResponse response = ApiTestUtils.request("GET", endpoint, null);
@@ -84,7 +96,6 @@ public class AccountManagementTest {
     }
 
     @Test
-    @Order(4)
     public void updateAccountTest() {
         String endpoint = "/accounts/1";
         ApiTestUtils.TestResponse response = ApiTestUtils.request("PUT", endpoint, gsonBuilder.create().toJsonTree(doe, AccountDto.class).toString());
@@ -98,18 +109,27 @@ public class AccountManagementTest {
     }
 
     @Test
-    @Order(5)
     public void getNonExistingAccountByIdTest() {
-        String endpoint = "/accounts/2";
+        String endpoint = "/accounts/4";
         ApiTestUtils.TestResponse response = ApiTestUtils.request("GET", endpoint, null);
         assertEquals(200, response.status);
         assertEquals(StatusResponse.ERROR, gsonBuilder.create().fromJson(response.body, StandardResponse.class).getStatus());
     }
 
+    @AfterEach
+    public void clearData() {
+        accountRepository.deleteAllAccounts();
+    }
+
     @AfterAll
     public void tearDown() {
         accountRepository.deleteAllAccounts();
-        stop();
+        try {
+            stop();
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            log.error("{}", e);
+        }
     }
 
 }

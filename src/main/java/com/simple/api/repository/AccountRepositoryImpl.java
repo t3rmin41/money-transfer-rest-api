@@ -108,6 +108,7 @@ public class AccountRepositoryImpl implements AccountRepository {
 
     @Override
     public void deleteAllAccounts() {
+        nextId.updateAndGet(current -> current > 0L ? 0L : 0L);
         accounts.clear();
     }
 }

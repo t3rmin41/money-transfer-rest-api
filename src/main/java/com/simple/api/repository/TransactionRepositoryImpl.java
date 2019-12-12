@@ -76,6 +76,7 @@ public class TransactionRepositoryImpl implements TransactionRepository {
 
     @Override
     public void deleteAllTransactions() {
+        nextId.updateAndGet(current -> current > 0L ? 0L : 0L);
         transactions.clear();
     }
 }

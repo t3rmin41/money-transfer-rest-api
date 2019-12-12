@@ -36,8 +36,8 @@ public class TransactionController implements ApiController {
     public void init() {
         get("/transactions", this::getTransactions);
         get("/accounts/:id/transactions", this::getAccountTransactions);
-        get("/accounts/:id/transactions/incoming", this::getAccountTransactions);
-        get("/accounts/:id/transactions/outgoing", this::getAccountTransactions);
+        get("/accounts/:id/transactions/incoming", this::getAccountIncomingTransactions);
+        get("/accounts/:id/transactions/outgoing", this::getAccountOutgoingTransactions);
         post("/transactions", this::createTransaction);
     }
 

@@ -20,7 +20,7 @@ public class TransactionService {
 
     public List<TransactionDto> getTransactions() {
         return transactionRepository.getTransactions().stream().map(domain ->
-            new TransactionDto(domain.getId(), domain.getType(), domain.getFrom(), domain.getTo(), domain.getAmount(), domain.getTimestamp()))
+            new TransactionDto(domain.getId(), domain.getType().name(), domain.getFrom(), domain.getTo(), domain.getAmount(), domain.getTimestamp()))
          .collect(Collectors.toList());
     }
 
@@ -41,9 +41,9 @@ public class TransactionService {
 
     public TransactionDto processTransaction(TransactionDto dto) throws AccountNotFoundException, NegativeBalanceException, UnknwonTransactionTypeException {
         switch (dto.getType()) {
-            case DEPOSIT:  return processDeposit(dto);
-            case WITHDRAW: return processWithdrawal(dto);
-            case TRANSFER: return processTransfer(dto);
+            case "DEPOSIT":  return processDeposit(dto);
+            case "WITHDRAW": return processWithdrawal(dto);
+            case "TRANSFER": return processTransfer(dto);
             default :      throw new UnknwonTransactionTypeException("UNKNOWN", "Transaction type unknown");
         }
     }
@@ -57,7 +57,7 @@ public class TransactionService {
         }
     }
 
-    public TransactionDto processWithdrawal(TransactionDto dto) throws AccountNotFoundException, NegativeBalanceException {
+    private TransactionDto processWithdrawal(TransactionDto dto) throws AccountNotFoundException, NegativeBalanceException {
         try {
             accountRepository.decreaseAccountBalance(dto.getFrom(), dto.getAmount());
             return TransactionMapperKt.toDto(transactionRepository.create(TransactionMapperKt.toDomain(dto)));
@@ -68,7 +68,7 @@ public class TransactionService {
         }
     }
 
-    public TransactionDto processTransfer(TransactionDto dto) throws AccountNotFoundException, NegativeBalanceException {
+    private TransactionDto processTransfer(TransactionDto dto) throws AccountNotFoundException, NegativeBalanceException {
         try {
             accountRepository.transferBetweenAccounts(dto.getFrom(), dto.getTo(), dto.getAmount());
             return TransactionMapperKt.toDto(transactionRepository.create(TransactionMapperKt.toDomain(dto)));
@@ -77,5 +77,13 @@ public class TransactionService {
         } catch (NegativeBalanceException e) {
             throw new NegativeBalanceException(e.getAccountId(), e.getAmount(), e.getMessage());
         }
+    }
+
+    public void deleteTransactionById(String id) {
+        transactionRepository.deleteTransactionById(new Long(id));
+    }
+
+    public void deleteAllTransactions() {
+        transactionRepository.deleteAllTransactions();
     }
 }

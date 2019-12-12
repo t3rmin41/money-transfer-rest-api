@@ -35,4 +35,12 @@ public class AccountService {
             throw new AccountNotFoundException(e.getAccountId(), e.getMessage());
         }
     }
+
+    public void deleteAccountById(String id) {
+        accountRepository.deleteAccountById(new Long(id));
+    }
+
+    public void deleteAllAccounts() {
+        accountRepository.deleteAllAccounts();
+    }
 }

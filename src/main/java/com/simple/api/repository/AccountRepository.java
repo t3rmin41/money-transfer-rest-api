@@ -19,4 +19,6 @@ public interface AccountRepository {
     Account increaseAccountBalance(Long id, BigDecimal amount) throws AccountNotFoundException;
     Account decreaseAccountBalance(Long id, BigDecimal amount) throws AccountNotFoundException, NegativeBalanceException;
     void transferBetweenAccounts(Long fromId, Long toId, BigDecimal amount) throws AccountNotFoundException, NegativeBalanceException;
+    void deleteAccountById(Long id);
+    void deleteAllAccounts();
 }

@@ -1,12 +1,13 @@
 package com.simple.api.mapper
 
 import com.simple.api.domain.Transaction
+import com.simple.api.domain.TransactionType
 import com.simple.api.dto.TransactionDto
 
 fun Transaction.toDto(): TransactionDto =
     TransactionDto(
         id = this.id,
-        type = this.type,
+        type = this.type?.name,
         from = this.from,
         to = this.to,
         amount = this.amount,
@@ -16,7 +17,7 @@ fun Transaction.toDto(): TransactionDto =
 fun TransactionDto.toDomain(): Transaction =
     Transaction(
         id = this.id,
-        type = this.type,
+        type = TransactionType.getTypeByString(this.type),
         from = this.from,
         to = this.to,
         amount = this.amount,

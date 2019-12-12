@@ -39,6 +39,11 @@ public class TransactionRepositoryImpl implements TransactionRepository {
     }
 
     @Override
+    public Transaction getById(Long id) {
+        return transactions.get(id);
+    }
+
+    @Override
     public List<Transaction> getTransactions() {
         return transactions.values().stream().collect(Collectors.toList());
     }
@@ -46,21 +51,31 @@ public class TransactionRepositoryImpl implements TransactionRepository {
     @Override
     public List<Transaction> getAccountTransactions(Long accountId) {
         return transactions.values().stream().filter( t ->
-            accountId == t.getFrom() || accountId == t.getTo()
+            accountId.equals(t.getFrom()) || accountId.equals(t.getTo())
         ).collect(Collectors.toList());
     }
 
     @Override
     public List<Transaction> getAccountIncomingTransactions(Long accountId) {
         return transactions.values().stream().filter( t ->
-            accountId == t.getTo() && (t.getType() == TransactionType.DEPOSIT || t.getType() == TransactionType.TRANSFER)
+            accountId.equals(t.getTo()) && (t.getType() == TransactionType.DEPOSIT || t.getType() == TransactionType.TRANSFER)
         ).collect(Collectors.toList());
     }
 
     @Override
     public List<Transaction> getAccountOutgoingTransactions(Long accountId) {
         return transactions.values().stream().filter( t ->
-            accountId == t.getFrom() && (t.getType() == TransactionType.WITHDRAW || t.getType() == TransactionType.TRANSFER)
+            accountId.equals(t.getFrom()) && (t.getType() == TransactionType.WITHDRAW || t.getType() == TransactionType.TRANSFER)
         ).collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteTransactionById(Long id) {
+        transactions.remove(id);
+    }
+
+    @Override
+    public void deleteAllTransactions() {
+        transactions.clear();
     }
 }

@@ -100,4 +100,14 @@ public class AccountRepositoryImpl implements AccountRepository {
         decreaseAccountBalance(from.getId(), amount); // decrease first
         increaseAccountBalance(to.getId(), amount);
     }
+
+    @Override
+    public void deleteAccountById(Long id) {
+        accounts.remove(id);
+    }
+
+    @Override
+    public void deleteAllAccounts() {
+        accounts.clear();
+    }
 }

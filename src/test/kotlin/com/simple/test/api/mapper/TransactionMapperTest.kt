@@ -20,7 +20,7 @@ class TransactionMapperTest {
     val amount: BigDecimal = BigDecimal.TEN
     val timestamp: Instant = Instant.now()
 
-    val dto = TransactionDto(id, type, from, to, amount, timestamp)
+    val dto = TransactionDto(id, type.name, from, to, amount, timestamp)
     val domain = Transaction(id, type, from, to, amount, timestamp)
 
     @Test

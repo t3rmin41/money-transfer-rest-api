@@ -6,8 +6,11 @@ import com.simple.api.repository.TransactionRepository;
 import com.simple.api.repository.TransactionRepositoryImpl;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestMethodOrder;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -15,6 +18,7 @@ import java.time.Instant;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TransactionRepositoryTest {
 
     private TransactionRepository transactionRepository = TransactionRepositoryImpl.getInstance();
@@ -32,12 +36,14 @@ public class TransactionRepositoryTest {
     }
 
     @Test
+    @Order(1)
     public void createTransactionTest() {
         transactionRepository.create(new Transaction(null, TransactionType.TRANSFER, 1L, 2L, BigDecimal.valueOf(0.5), Instant.now()));
         assertEquals(BigDecimal.valueOf(0.5), transactionRepository.getById(4L).getAmount());
     }
 
     @Test
+    @Order(2)
     public void getTransactionsTest() {
         long index = 1;
         for (Transaction t : transactionRepository.getTransactions()) {
@@ -47,18 +53,21 @@ public class TransactionRepositoryTest {
     }
 
     @Test
+    @Order(3)
     public void getAccountTransactionsTest() {
         assertEquals(3, transactionRepository.getAccountTransactions(1L).size());
         assertEquals(1, transactionRepository.getAccountTransactions(2L).size());
     }
 
     @Test
+    @Order(4)
     public void getAccountIncomingTransactionsTest() {
         assertEquals(1, transactionRepository.getAccountIncomingTransactions(1L).size());
         assertEquals(1, transactionRepository.getAccountIncomingTransactions(2L).size());
     }
 
     @Test
+    @Order(5)
     public void getAccountOutgoingTransactions() {
         assertEquals(2, transactionRepository.getAccountOutgoingTransactions(1L).size());
         assertEquals(0, transactionRepository.getAccountOutgoingTransactions(2L).size());

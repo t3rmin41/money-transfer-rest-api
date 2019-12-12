@@ -1,21 +1,13 @@
 package com.simple.test.api.testcase;
 
-import com.simple.api.domain.Account;
 import com.simple.api.domain.Transaction;
 import com.simple.api.domain.TransactionType;
-import com.simple.api.exceptions.AccountNotFoundException;
-import com.simple.api.repository.AccountRepository;
-import com.simple.api.repository.AccountRepositoryImpl;
 import com.simple.api.repository.TransactionRepository;
 import com.simple.api.repository.TransactionRepositoryImpl;
 import com.simple.test.api.tester.MultithreadedStressTester;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.time.Instant;

@@ -8,14 +8,18 @@ import com.simple.api.repository.AccountRepositoryImpl;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestMethodOrder;
 
 import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AccountRepositoryTest {
 
     private AccountRepository accountRepository = AccountRepositoryImpl.getInstance();
@@ -37,6 +41,7 @@ public class AccountRepositoryTest {
     }
 
     @Test
+    @Order(1)
     public void testCreateAccount() {
         accountRepository.createAccount(new Account(null, "Alice", null));
         try {
@@ -49,6 +54,7 @@ public class AccountRepositoryTest {
     }
 
     @Test
+    @Order(2)
     public void findByIdTest() {
         try {
             assertEquals(2L, accountRepository.getAccountById(2L).getId().longValue());
@@ -58,6 +64,7 @@ public class AccountRepositoryTest {
     }
 
     @Test
+    @Order(3)
     public void increaseBalanceTest() {
         try {
             accountRepository.increaseAccountBalance(1L, BigDecimal.TEN);
@@ -68,6 +75,7 @@ public class AccountRepositoryTest {
     }
 
     @Test
+    @Order(4)
     public void decreaseBalanceTest() {
         try {
             accountRepository.getAccountById(1L).setBalance(BigDecimal.ZERO);

@@ -16,8 +16,11 @@ import com.simple.test.api.tester.MultithreadedStressTester;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestMethodOrder;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -25,6 +28,7 @@ import java.time.Instant;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class TransactionServiceTest {
 
     private AccountRepository accountRepository = AccountRepositoryImpl.getInstance();
@@ -49,6 +53,7 @@ public class TransactionServiceTest {
     }
 
     @Test
+    @Order(1)
     public void testProcessDeposit() {
         try {
             transactionService.processTransaction(deposit);
@@ -61,6 +66,7 @@ public class TransactionServiceTest {
     }
 
     @Test
+    @Order(2)
     public void testProcessWithdrawal() throws InterruptedException {
         try {
             transactionService.processTransaction(deposit);
@@ -80,6 +86,7 @@ public class TransactionServiceTest {
     }
 
     @Test
+    @Order(3)
     public void testProcessTransfer() throws InterruptedException {
         try {
             transactionService.processTransaction(deposit);

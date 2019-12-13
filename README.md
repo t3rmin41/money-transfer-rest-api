@@ -41,7 +41,7 @@ Newly created account is returned in the response.
 
   Example: 
   
-  `GET /accounts/13`
+  `GET /accounts/1`
 
 + **POST** on `/transactions` `JSON object` to process new transaction.
 Examples: 
@@ -58,16 +58,16 @@ Examples:
 
   Example:
   
-  `GET /accounts/13/transactions`
+  `GET /accounts/1/transactions`
 
 + **GET** on `/accounts/:id/transactions/incoming` to get all incoming transactions of the account. 
   
     Example:
     
-    `GET /accounts/13/transactions/incoming`
+    `GET /accounts/1/transactions/incoming`
 
 + **GET** on `/accounts/:id/transactions/outgoing` to get all incoming transactions of the account. 
   
     Example:
     
-    `GET /accounts/13/transactions/outgoing`
+    `GET /accounts/1/transactions/outgoing`

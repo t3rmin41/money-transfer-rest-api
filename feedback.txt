@@ -1,0 +1,14 @@
+"In the application the implementation used singleton, which is not the best pattern to use.
+The double lock idiom used to implement a singleton pattern was not implemented correctly - solution not thread safe.
+synchronizedMap is not the best option for concurrent map
+Thread safety attempt leads to poor performance.
+Liked stress tester." 
+
+"The task was generally done. There is some test coverage.
+There are some inconsistencies with the task requirements:
+- Obvious error cases are not checked (Negative transfer amount, transfer to the same account)
+- There is no check for deadlock while processing transfer.
+- Common http error codes are not used.
+- There are parameters in code that is not used.
+- The need to use both java and kotlin is not clear.
+Although the overall task was completed, we expected to see a different level of implementation quality."
